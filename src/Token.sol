@@ -3,15 +3,9 @@ pragma solidity ^0.8.28;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {
-    ERC20Pausable
-} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
-import {
-    ERC20Permit
-} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import {
-    ERC1363
-} from "@openzeppelin/contracts/token/ERC20/extensions/ERC1363.sol";
+import {ERC20Pausable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import {ERC1363} from "@openzeppelin/contracts/token/ERC20/extensions/ERC1363.sol";
 
 contract Token is ERC20, ERC20Pausable, ERC20Permit, Ownable, ERC1363 {
     // Tax percent
@@ -26,9 +20,7 @@ contract Token is ERC20, ERC20Pausable, ERC20Permit, Ownable, ERC1363 {
     // Staked balances
     mapping(address => uint256) public staked;
 
-    constructor(
-        address _treasury
-    ) ERC20("Nova", "NV") Ownable(msg.sender) ERC20Permit("Nova") {
+    constructor(address _treasury) ERC20("Nova", "NV") Ownable(msg.sender) ERC20Permit("Nova") {
         treasury = _treasury;
         require(_treasury != address(0), "Invalid treasury");
         _mint(msg.sender, 1_000_000 * 10 ** decimals());
@@ -45,11 +37,7 @@ contract Token is ERC20, ERC20Pausable, ERC20Permit, Ownable, ERC1363 {
     }
 
     // Transfer logic with tax and checks
-    function _update(
-        address from,
-        address to,
-        uint256 value
-    ) internal override(ERC20, ERC20Pausable) whenNotPaused {
+    function _update(address from, address to, uint256 value) internal override(ERC20, ERC20Pausable) whenNotPaused {
         require(!blacklisted[from] && !blacklisted[to], "Blacklisted");
 
         if (from == address(0) || to == address(0)) {
